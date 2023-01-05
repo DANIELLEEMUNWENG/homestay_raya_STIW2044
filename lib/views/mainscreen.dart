@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (content) => const ProfileScreen()));
+                          builder: (content) =>  ProfileScreen(user: User(id: "id", name: "name", email: "email", phone: "phone", address: "address", regdate: "regdate"))));
                 },
               ),
             ],

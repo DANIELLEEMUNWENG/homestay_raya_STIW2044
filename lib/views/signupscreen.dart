@@ -240,7 +240,14 @@ class _SignUpState extends State<SignUp> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (content) => const ProfileScreen()));
+                          builder: (content) => ProfileScreen(
+                              user: User(
+                                  id: "id",
+                                  name: "name",
+                                  email: "email",
+                                  phone: "phone",
+                                  address: "address",
+                                  regdate: "regdate"))));
                 },
               ),
             ],
@@ -277,60 +284,61 @@ class _SignUpState extends State<SignUp> {
           fontSize: 14.0);
       return;
     }
-
-    if (!_formkey.currentState!.validate()) {
-      Fluttertoast.showToast(
-          msg: "Please complete the registration form first",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          fontSize: 14.0);
-      return;
-    }
-    if (!check1!) {
-      Fluttertoast.showToast(
-          msg: "Please accept the terms and conditions",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          fontSize: 14.0);
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Register new account?",
-            style: TextStyle(),
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _registerUser(_name, _email, _phone, _pass);
-              },
+    
+      if (!_formkey.currentState!.validate()) {
+        Fluttertoast.showToast(
+            msg: "Please complete the registration form first",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+        return;
+      }
+      if (!check1!) {
+        Fluttertoast.showToast(
+            msg: "Please accept the terms and conditions",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+        return;
+      }
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            title: const Text(
+              "Register new account?",
+              style: TextStyle(),
             ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
+            content: const Text("Are you sure?", style: TextStyle()),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _registerUser(_name, _email, _phone, _pass);
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+              TextButton(
+                child: const Text(
+                  "No",
+                  style: TextStyle(),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    
   }
 
   void _registerUser(String name, String email, String phone, String pass) {
