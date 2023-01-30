@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:homestay_raya/models/user.dart';
+import 'package:homestay_raya/views/detailsscreen.dart';
 import 'package:homestay_raya/views/loginscreen.dart';
 import 'package:homestay_raya/views/mainscreen.dart';
 import 'package:homestay_raya/views/newproductscreen.dart';
@@ -335,10 +336,96 @@ class _ProfileState extends State<ProfileScreen> {
           titlecenter = "Not Product Available";
         }
       } else {
-        titlecenter = "Nos Product Available"; //status code other than 200
+        titlecenter = "No Product Available"; //status code other than 200
         productList.clear(); //clear productList array
       }
       setState(() {}); //refresh UI
     });
   }
+
+  
+  Future<void> _showDetails(int index) async {
+    Product product = Product.fromJson(productList[index].toJson());
+
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (content) => DetailsScreen(
+                  product: product,
+                  user: widget.user,
+                )));
+    _loadProducts();
+    
+  }
+  
+  _deleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text(
+            "Delete ${truncateString(productList[index].productName.toString(), 15)}",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                _deleteProduct(index);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteProduct(index) {
+    try {
+      http.post(Uri.parse("${Confiq.SERVER}/php/delete_product.php"), body: {
+        "productid": productList[index].productId,
+      }).then((response) {
+        var data = jsonDecode(response.body);
+        if (response.statusCode == 200 && data['status'] == "success") {
+          Fluttertoast.showToast(
+              msg: "Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          _loadProducts();
+          return;
+        } else {
+          Fluttertoast.showToast(
+              msg: "Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          return;
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  
+  truncateString(String string, int i) {}
+
 }
