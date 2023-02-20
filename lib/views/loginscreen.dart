@@ -214,21 +214,26 @@ class _LoginState extends State<Login> {
           fontSize: 14.0);
       return;
     }
-    String email = _emailEditingController.text;
-    String password = _passEditingController.text;
+    String _email = _emailEditingController.text;
+    String _password = _passEditingController.text;
     http.post(Uri.parse("${Confiq.SERVER}/php/login_user.php"),
-        body: {"email": email, "password": password}).then((response) {
+        body: {"email": _email, "password": _password}).then((response) {
       print(response.body);
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        print(jsonResponse);
-        User user = User.fromJson(jsonResponse['data']);
 
+      // var jsonResponse = json.decode(response.body);
+      if (response.statusCode == 200) {
+        //     User user = User.fromJson(jsonResponse['data']);
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MainScreen(user: user),
-            ));
+                builder: (context) => MainScreen(
+                    user: User(
+                        id: "id",
+                        name: "name",
+                        email: "email",
+                        phone: "phone",
+                        address: "address",
+                        regdate: "regdate"))));
       } else {
         Fluttertoast.showToast(
             msg: "Login failed",

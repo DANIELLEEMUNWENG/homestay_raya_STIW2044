@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homestay_raya/views/profilescreen.dart';
+import 'package:homestay_raya/views/updatescreen.dart';
 
 import '../models/user.dart';
 import 'signupscreen.dart';
@@ -92,6 +93,16 @@ class _MainScreenState extends State<MainScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (content) =>  ProfileScreen(user: User(id: "id", name: "name", email: "email", phone: "phone", address: "address", regdate: "regdate"))));
+                },
+              ),
+              ListTile(
+                title: const Text('Update Profile'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (content) => UpdateScreen(user: User(id: "id", name: "name", email: "email", phone: "phone", address: "address", regdate: "regdate"))));
                 },
               ),
             ],

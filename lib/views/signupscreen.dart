@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:homestay_raya/confiq.dart';
 import 'package:homestay_raya/models/user.dart';
 import 'package:homestay_raya/views/mainscreen.dart';
+import 'package:homestay_raya/views/updatescreen.dart';
 import 'package:http/http.dart' as http;
 import 'profilescreen.dart';
 
@@ -248,6 +249,16 @@ class _SignUpState extends State<SignUp> {
                                   phone: "phone",
                                   address: "address",
                                   regdate: "regdate"))));
+                },
+              ),
+              ListTile(
+                title: const Text('Update Profile'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (content) => UpdateScreen(user: User(id: "id", name: "name", email: "email", phone: "phone", address: "address", regdate: "regdate"))));
                 },
               ),
             ],

@@ -188,8 +188,7 @@ class _ProfilePage extends State<ProfilePage> {
           "${Confiq.SERVER}/php/loadallproducts.php?search=$search&pageno=$pageno"),
     )
         .then((response) {
-     
-    //  progressDialog.show();
+      //  progressDialog.show();
       print(response.body);
       // wait for response from the request
       if (response.statusCode == 200) {
@@ -224,7 +223,7 @@ class _ProfilePage extends State<ProfilePage> {
       }
 
       setState(() {}); //refresh UI
-     // progressDialog.hide();
+      // progressDialog.hide();
     });
   }
 

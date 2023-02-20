@@ -10,6 +10,7 @@ import 'package:homestay_raya/views/detailsscreen.dart';
 import 'package:homestay_raya/views/loginscreen.dart';
 import 'package:homestay_raya/views/mainscreen.dart';
 import 'package:homestay_raya/views/newproductscreen.dart';
+import 'package:homestay_raya/views/updatescreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:homestay_raya/confiq.dart';
 import '../models/product.dart';
@@ -76,41 +77,49 @@ class _ProfileState extends State<ProfileScreen> {
                       crossAxisCount: 2,
                       children: List.generate(productList.length, (index) {
                         return Card(
-                          child: Column(children: [
-                            Flexible(
-                              flex: 6,
-                              child: CachedNetworkImage(
-                                width: 150 / 2,
-                                fit: BoxFit.cover,
-                                imageUrl:
-                                    "${Confiq.SERVER}/assets/productimages/${productList[index].productId}.png",
-                                placeholder: (context, url) =>
-                                    const LinearProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                            Flexible(
-                                flex: 4,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        (productList[index]
-                                            .productName
-                                            .toString()),
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                          "RM ${double.parse(productList[index].productPrice.toString()).toStringAsFixed(2)}"),
-                                    ],
+                            elevation: 8,
+                            child: InkWell(
+                              onTap: () {
+                                _showDetails(index);
+                              },
+                              onLongPress: () {
+                                _deleteDialog(index);
+                              },
+                              child: Column(children: [
+                                Flexible(
+                                  flex: 6,
+                                  child: CachedNetworkImage(
+                                    width: 150 / 2,
+                                    fit: BoxFit.cover,
+                                    imageUrl:
+                                        "${Confiq.SERVER}/assets/productimages/${productList[index].productId}.png",
+                                    placeholder: (context, url) =>
+                                        const LinearProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
-                                ))
-                          ]),
-                        );
+                                ),
+                                Flexible(
+                                    flex: 4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            (productList[index]
+                                                .productName
+                                                .toString()),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              "RM ${double.parse(productList[index].productPrice.toString()).toStringAsFixed(2)}"),
+                                        ],
+                                      ),
+                                    ))
+                              ]),
+                            ));
                       }),
                     ),
                   )
@@ -197,6 +206,23 @@ class _ProfileState extends State<ProfileScreen> {
                                     address: "address",
                                     regdate: "regdate"),
                               )));
+                },
+              ),
+              ListTile(
+                title: const Text('Update Profile'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (content) => UpdateScreen(
+                              user: User(
+                                  id: "id",
+                                  name: "name",
+                                  email: "email",
+                                  phone: "phone",
+                                  address: "address",
+                                  regdate: "regdate"))));
                 },
               ),
             ],
@@ -305,10 +331,8 @@ class _ProfileState extends State<ProfileScreen> {
       return; //exit method if true l
     }
     http
-        .get(
-      Uri.parse(
-          "${Confiq.SERVER}/php/loadprofileproduct.php?userid=${widget.user.id}"),
-    )
+        .get(Uri.parse(
+            "${Confiq.SERVER}/php/localprofileproduct.php?userid=${widget.user.id}"))
         .then((response) {
       // wait for response from the request
       if (response.statusCode == 200) {
@@ -343,7 +367,6 @@ class _ProfileState extends State<ProfileScreen> {
     });
   }
 
-  
   Future<void> _showDetails(int index) async {
     Product product = Product.fromJson(productList[index].toJson());
 
@@ -355,9 +378,8 @@ class _ProfileState extends State<ProfileScreen> {
                   user: widget.user,
                 )));
     _loadProducts();
-    
   }
-  
+
   _deleteDialog(int index) {
     showDialog(
       context: context,
@@ -399,7 +421,7 @@ class _ProfileState extends State<ProfileScreen> {
   void _deleteProduct(index) {
     try {
       http.post(Uri.parse("${Confiq.SERVER}/php/delete_product.php"), body: {
-        "productid": productList[index].productId,
+        "productname": productList[index].productName,
       }).then((response) {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == "success") {
@@ -425,7 +447,6 @@ class _ProfileState extends State<ProfileScreen> {
       print(e.toString());
     }
   }
-  
-  truncateString(String string, int i) {}
 
+  truncateString(String string, int i) {}
 }

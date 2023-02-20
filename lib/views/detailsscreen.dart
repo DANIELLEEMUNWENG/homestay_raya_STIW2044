@@ -31,7 +31,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       TextEditingController();
   final TextEditingController _prpriceEditingController =
       TextEditingController();
-  final TextEditingController _prdelEditingController = TextEditingController();
+
   final TextEditingController _guestEditingController = TextEditingController();
   final TextEditingController _prstateEditingController =
       TextEditingController();
@@ -62,7 +62,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       resWidth = screenWidth * 0.75;
     }
     return Scaffold(
-        appBar: AppBar(title: const Text("Details/Edit")),
+        appBar: AppBar(title: const Text("Edit Details")),
         body: SingleChildScrollView(
           child: Column(children: [
             Card(
@@ -207,22 +207,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ],
                   ),
                   Row(children: [
-                    Flexible(
-                      flex: 5,
-                      child: TextFormField(
-                          textInputAction: TextInputAction.next,
-                          controller: _prdelEditingController,
-                          validator: (val) =>
-                              val!.isEmpty ? "Must be more than zero" : null,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                              labelText: 'Delivery charge/km',
-                              labelStyle: TextStyle(),
-                              icon: Icon(Icons.delivery_dining),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width: 2.0),
-                              ))),
-                    ),
+                    
                     Flexible(
                         flex: 5,
                         child: CheckboxListTile(

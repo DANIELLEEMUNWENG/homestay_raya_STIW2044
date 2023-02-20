@@ -29,6 +29,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   bool isDisable = false;
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _oldpasswordController = TextEditingController();
@@ -44,6 +45,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
     }
 
     _nameController.text = widget.user.name.toString();
+    _emailController.text = widget.user.email.toString();
     _phoneController.text = widget.user.phone.toString();
   }
 
@@ -68,7 +70,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   height: screenHeight * 0.25,
                   child: Row(
                     children: [
-                      Flexible(
+                      /* Flexible(
                         flex: 4,
                         child: SizedBox(
                             height: screenHeight * 0.25,
@@ -77,9 +79,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                child:CachedNetworkImage(
-                                    width: resWidth / 2,
-                                    fit: BoxFit.cover, 
+                                child: CachedNetworkImage(
+                                  width: resWidth / 2,
+                                  fit: BoxFit.cover,
                                   imageUrl:
                                       "${Confiq.SERVER}/assets/profileimages/${widget.user.id}.png?v=$val",
                                   placeholder: (context, url) =>
@@ -93,6 +95,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               ),
                             )),
                       ),
+                      */
                       Flexible(
                           flex: 6,
                           child: Column(
@@ -111,23 +114,45 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                   thickness: 2.0,
                                 ),
                               ),
-                              Table(
-                                columnWidths: const {
-                                  0: FractionColumnWidth(0.3),
-                                  1: FractionColumnWidth(0.7)
-                                },
-                                defaultVerticalAlignment:
-                                    TableCellVerticalAlignment.middle,
+
+                              // columnWidths: const {
+                              //   0: FractionColumnWidth(0.3),
+                              //   1: FractionColumnWidth(0.7)
+                              // },
+                              // defaultVerticalAlignment:
+                              //   TableCellVerticalAlignment.middle,
+
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  TableRow(children: [
-                                    const Icon(Icons.email),
-                                    Text(widget.user.email.toString()),
-                                  ]),
-                                  TableRow(children: [
-                                    const Icon(Icons.phone),
-                                    Text(widget.user.phone.toString()),
-                                  ]),
-                                  
+                                  Spacer(),
+                                  Icon(Icons.email),
+                                  Spacer(),
+                                  Expanded(
+                                    child: Text(
+                                      widget.user.email.toString(),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Spacer(),
+                                ],
+                              ),
+
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Spacer(),
+                                  Icon(Icons.phone),
+                                  Spacer(),
+                                  Expanded(
+                                    child: Text(
+                                      widget.user.phone.toString(),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Spacer(),
                                 ],
                               ),
                             ],
@@ -167,8 +192,18 @@ class _UpdateScreenState extends State<UpdateScreen> {
                               height: 2,
                             ),
                             MaterialButton(
+                              onPressed: isDisable ? null : _updateEmailDialog,
+                              child: const Text("UPDATE Email"),
+                            ),
+                            const Divider(
+                              height: 2,
+                            ),
+                            MaterialButton(
                               onPressed: isDisable ? null : _updatePhoneDialog,
                               child: const Text("UPDATE PHONE"),
+                            ),
+                            const Divider(
+                              height: 2,
                             ),
                             MaterialButton(
                               onPressed: isDisable ? null : _changePassDialog,
@@ -190,10 +225,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             ),
                             const Divider(
                               height: 2,
-                            ),
-                            MaterialButton(
-                              onPressed: isDisable ? null : buyCreditPage,
-                              child: const Text("BUY CREDIT"),
                             ),
                             const Divider(
                               height: 2,
@@ -236,10 +267,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) => const SignUp()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (content) => const SignUp()));
               },
             ),
             TextButton(
@@ -278,10 +307,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) => const Login()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (content) => const Login()));
               },
             ),
             TextButton(
@@ -347,7 +374,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
     );
     if (pickedFile != null) {
       _image = File(pickedFile.path);
-     
     }
   }
 
@@ -360,18 +386,15 @@ class _UpdateScreenState extends State<UpdateScreen> {
     );
     if (pickedFile != null) {
       _image = File(pickedFile.path);
-      
     }
   }
 
-
   void _updateProfileImage(image) {
     String base64Image = base64Encode(image!.readAsBytesSync());
-    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"),
-        body: {
-          "userid": widget.user.id,
-          "image": base64Image,
-        }).then((response) {
+    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"), body: {
+      "userid": widget.user.id,
+      "image": base64Image,
+    }).then((response) {
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         Fluttertoast.showToast(
@@ -451,11 +474,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   }
 
   void _updateName(String newname) {
-    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"),
-        body: {
-          "userid": widget.user.id,
-          "newname": newname,
-        }).then((response) {
+    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"), body: {
+      "userid": widget.user.id,
+      "newname": newname,
+    }).then((response) {
       print(response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
@@ -467,6 +489,91 @@ class _UpdateScreenState extends State<UpdateScreen> {
             fontSize: 16.0);
         setState(() {
           widget.user.name = newname;
+        });
+      } else {
+        Fluttertoast.showToast(
+            msg: "Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
+    });
+  }
+
+  void _updateEmailDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Change Email?",
+            style: TextStyle(),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Email';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                String newemail = _emailController.text;
+                _updateEmail(newemail);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateEmail(String newemail) {
+    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"), body: {
+      "userid": widget.user.id,
+      "newemail": newemail,
+    }).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        Fluttertoast.showToast(
+            msg: "Success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+        setState(() {
+          widget.user.email = newemail;
         });
       } else {
         Fluttertoast.showToast(
@@ -538,11 +645,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   }
 
   void _updatePhone(String newphone) {
-    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"),
-        body: {
-          "userid": widget.user.id,
-          "newphone": newphone,
-        }).then((response) {
+    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"), body: {
+      "userid": widget.user.id,
+      "newphone": newphone,
+    }).then((response) {
       print(response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
@@ -709,13 +815,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 await prefs.setString('pass', '');
                 await prefs.setBool('remember', false);
                 User user = User(
-                    id: "0",
-                    email: "unregistered@email.com",
-                    name: "unregistered",
-                    address: "na",
-                    phone: "0123456789",
-                    regdate: "0",
-                   );
+                  id: "0",
+                  email: "unregistered@email.com",
+                  name: "unregistered",
+                  address: "na",
+                  phone: "0123456789",
+                  regdate: "0",
+                );
                 // ignore: use_build_context_synchronously
                 Navigator.pushReplacement(
                     context,
@@ -739,12 +845,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
   }
 
   void changePass() {
-    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"),
-        body: {
-          "userid": widget.user.id,
-          "oldpass": _oldpasswordController.text,
-          "newpass": _newpasswordController.text,
-        }).then((response) {
+    http.post(Uri.parse("${Confiq.SERVER}/php/update_profile.php"), body: {
+      "userid": widget.user.id,
+      "oldpass": _oldpasswordController.text,
+      "newpass": _newpasswordController.text,
+    }).then((response) {
       print(response.body);
       var jsondata = jsonDecode(response.body);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
@@ -766,4 +871,3 @@ class _UpdateScreenState extends State<UpdateScreen> {
     });
   }
 }
-
