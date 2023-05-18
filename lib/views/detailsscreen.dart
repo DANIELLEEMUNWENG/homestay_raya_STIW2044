@@ -206,9 +206,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       )
                     ],
                   ),
-                  Row(children: [
+                  /*Row(children: [
                     
-                    Flexible(
+                   Flexible(
                         flex: 5,
                         child: CheckboxListTile(
                           title: const Text("Lawfull Item?"), //    <-- label
@@ -219,7 +219,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             });
                           },
                         )),
+                        
                   ]),
+                  */
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
@@ -244,15 +246,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
           fontSize: 14.0);
       return;
     }
-    if (!_isChecked) {
-      Fluttertoast.showToast(
-          msg: "Please check agree checkbox",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          fontSize: 14.0);
-      return;
-    }
+    //if (!_isChecked) {
+    //Fluttertoast.showToast(
+    //  msg: "Please check agree checkbox",
+    //  toastLength: Toast.LENGTH_SHORT,
+    // gravity: ToastGravity.BOTTOM,
+    // timeInSecForIosWeb: 1,
+    // fontSize: 14.0);
+    //  return;
+    // }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -295,16 +297,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
     String prdesc = _prdescEditingController.text;
     String prprice = _prpriceEditingController.text;
     String guest = _guestEditingController.text;
-    
-    
+
     http.post(Uri.parse("${Confiq.SERVER}/php/update_product.php"), body: {
       "productid": widget.product.productId,
       "userid": widget.user.id,
       "prname": prname,
       "prdesc": prdesc,
       "prprice": prprice,
-      "guest":guest,
-     
+      "guest": guest,
     }).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == "success") {
